@@ -103,7 +103,7 @@ for i in range(numPolicy):
     data = {
             'name': NSP['items'][i]['meta']['display-name'],
             'uuid': NSP['items'][i]['meta']['name'],  
-            'generation': NSP['items'][i]['meta']['generation-id'],  # Assuming you meant to extract 'display-name' again
+            'generation': NSP['items'][i]['meta']['generation-id'],  
             'last change time': NSP['items'][i]['meta']['mod-time'],
             'rule count': len(NSP['items'][i]['spec']['rules']),  
             'status': NSP['items'][i]['status']['propagation-status']['status']  
