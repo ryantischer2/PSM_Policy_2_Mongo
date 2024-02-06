@@ -43,7 +43,7 @@ with open('pypen_init_data.json') as json_file:
 #input PSM Creds
 '''
 
-PSM_IP = 'https://10.9.7.245'
+PSM_IP = 'https://10.9.9.70'
 username = 'admin'
 password = 'Pensando0$'
 
@@ -60,7 +60,6 @@ if session is None:
 #pass session to get data
 NSP = pen.get_networksecuritypolicy(PSM_IP, session)
 numPolicy = len(NSP['items'])
-
 #save policy to mongo
 
 #mongo clients timeout
@@ -82,15 +81,10 @@ try:
 except Exception as e:
     print(f"MongoDB connection failed: {e}")
 
+
+#Create the database 
+db = client['AMD'] 
 #need to remove the . from the psm url
-
-ip_address = PSM_IP.replace('https://', '')
-
-# Replace '.' with '_'
-PSM = ip_address.replace('.', '_')
-
-# Select the database - 
-db = client[PSM]
 
 #create collection for policy overview
 collection = db['policyList']
@@ -99,14 +93,14 @@ collection.create_index([('uuid', 1), ('last change time', 1)], unique=True)
 
 #parse psm data for policy details
 for i in range(numPolicy):
-
     data = {
             'name': NSP['items'][i]['meta']['display-name'],
             'uuid': NSP['items'][i]['meta']['name'],  
             'generation': NSP['items'][i]['meta']['generation-id'],  
             'last change time': NSP['items'][i]['meta']['mod-time'],
             'rule count': len(NSP['items'][i]['spec']['rules']),  
-            'status': NSP['items'][i]['status']['propagation-status']['status']  
+            'status': NSP['items'][i]['status']['propagation-status']['status'],
+            'psm' : PSM_IP
     }
 
     try:
